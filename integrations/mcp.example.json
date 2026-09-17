@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "hhuvpn": {
+      "command": "python",
+      "args": ["E:/path/to/hhu-vpn-agent/integrations/mcp_server.py"],
+      "env": {
+        "PYTHONIOENCODING": "utf-8"
+      }
+    }
+  }
+}

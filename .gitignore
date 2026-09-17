@@ -1,0 +1,23 @@
+# 登录态与本地状态：绝对不要提交
+config.ini
+state/
+*.dpapi
+credentials.dpapi
+cookies.txt
+out.txt
+err.txt
+
+# 打包与验证产物（验证时会解压出完整副本，绝不能跟着进包/进仓库）
+.pack-check/
+.pack-staging/
+*.zip
+
+# 上游打包产物 / 缓存
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+tests/.tmp/
+upstream/logs/
+upstream/config.ini

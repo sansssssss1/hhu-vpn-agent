@@ -1,0 +1,14 @@
+# 配置文件里有你的密码，绝对不要提交
+config.ini
+
+# 运行产物
+logs/
+__pycache__/
+*.pyc
+build/
+dist/
+*.spec
+
+# 发布产物（走 GitHub Release 附件，不进仓库）
+release/
+*便携版.zip

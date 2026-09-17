@@ -1,0 +1,221 @@
+{
+  "schema": 1,
+  "note": "内置文献数据库目录。entry 是走出 WebVPN 后用于『确认已登上数据库』的首页地址；verify 规则可被 state/fingerprints.json 里校准出的指纹覆盖。",
+  "defaults": {
+    "verify": {
+      "expect_status": [200, 201, 202, 203, 206, 301, 302, 303, 304],
+      "min_bytes": 1000,
+      "institution_patterns": [
+        "(?:机构用户|所属机构|欢迎|您好|登录用户|当前IP|institution|orgName|entitled)[^<>]{0,40}(?:{inst})",
+        "(?:{inst})[^<>]{0,20}(?:图书馆|读者|用户|机构)"
+      ],
+      "forbid_any": [
+        "请登录|统一身份认证平台|请输入学号|账号登录|Sign in to your account",
+        "authserver/login|/cas/login|login[.]jsp", "authserver/login|/cas/login"
+      ]
+    }
+  },
+  "databases": {
+    "sd": {
+      "name": "ScienceDirect (Elsevier)",
+      "host": "www.sciencedirect.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "全文", "理工"],
+      "_note": "实测：校内 IP 直连时页面里就带 orgName:Hohai University，作为首选判定标记",
+      "verify": { "require_any": ["(?i)orgName.{0,3}[:=].{0,3}(?:河海|hohai)"] }
+    },
+    "cnki": {
+      "name": "中国知网 CNKI",
+      "host": "www.cnki.net",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["中文", "全文", "期刊/学位论文"],
+      "_note": "实测：CNKI 首页的「机构用户」四字与认证无关（它只是「全球学术快报」链接旁的标签），不能作为依据。",
+      "verify": {
+        "require_any": ["(?i)(?:欢迎|机构用户|所属机构|登录)[^<>]{0,30}(?:河海|hohai)"],
+        "verify_note": "实测（2026-09-16，校园网 + 已登录 WebVPN）：www.cnki.net 首页静态 HTML 里不出现机构名，只用脚本看不到认证状态；请用浏览器打开核对页面上的机构信息，或直接用它检索（能下全文即说明已授权）。"
+      }
+    },
+    "cnki-kns": {
+      "name": "中国知网 检索平台 (kns)",
+      "host": "kns.cnki.net",
+      "scheme": "https",
+      "entry": "/kns8s/",
+      "tags": ["中文", "检索入口"],
+      "_note": "实测：kns 无论直连还是走 WebVPN，都先返回 CNKI 的「安全验证」反爬页（约 4KB），脚本拿不到真实页面。",
+      "verify": {
+        "require_any": ["(?i)(?:欢迎|机构用户|所属机构|登录)[^<>]{0,30}(?:河海|hohai)"],
+        "verify_note": "实测（2026-09-16）：kns.cnki.net 会先给反爬「安全验证」页，脚本无法判定认证状态——请在浏览器里确认。"
+      }
+    },
+    "wanfang": {
+      "name": "万方数据",
+      "host": "www.wanfangdata.com.cn",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["中文", "期刊/学位论文"]
+    },
+    "cqvip": {
+      "name": "维普期刊 (cqvip)",
+      "host": "www.cqvip.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["中文", "期刊"]
+    },
+    "wos": {
+      "name": "Web of Science",
+      "host": "www.webofscience.com",
+      "scheme": "https",
+      "entry": "/wos/woscc/basic-search",
+      "tags": ["英文", "引文索引"]
+    },
+    "ieee": {
+      "name": "IEEE Xplore",
+      "host": "ieeexplore.ieee.org",
+      "scheme": "https",
+      "entry": "/Xplore/home.jsp",
+      "tags": ["英文", "全文", "电子/计算机"]
+    },
+    "springer": {
+      "name": "Springer Link",
+      "host": "link.springer.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "全文"]
+    },
+    "wiley": {
+      "name": "Wiley Online Library",
+      "host": "onlinelibrary.wiley.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "全文"]
+    },
+    "acs": {
+      "name": "ACS Publications",
+      "host": "pubs.acs.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "化学"]
+    },
+    "rsc": {
+      "name": "Royal Society of Chemistry",
+      "host": "pubs.rsc.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "化学"]
+    },
+    "tandf": {
+      "name": "Taylor & Francis Online",
+      "host": "www.tandfonline.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "全文"]
+    },
+    "sage": {
+      "name": "SAGE Journals",
+      "host": "journals.sagepub.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "全文"]
+    },
+    "oup": {
+      "name": "Oxford Academic",
+      "host": "academic.oup.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "全文"]
+    },
+    "cambridge": {
+      "name": "Cambridge Core",
+      "host": "www.cambridge.org",
+      "scheme": "https",
+      "entry": "/core/",
+      "tags": ["英文", "全文"]
+    },
+    "science": {
+      "name": "Science (AAAS)",
+      "host": "www.science.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "综合"]
+    },
+    "nature": {
+      "name": "Nature",
+      "host": "www.nature.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "综合"]
+    },
+    "aps": {
+      "name": "American Physical Society",
+      "host": "journals.aps.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "物理"]
+    },
+    "aip": {
+      "name": "AIP Publishing",
+      "host": "pubs.aip.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "物理"]
+    },
+    "asce": {
+      "name": "ASCE Library (土木)",
+      "host": "ascelibrary.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "土木/水利"]
+    },
+    "jstor": {
+      "name": "JSTOR",
+      "host": "www.jstor.org",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "人文社科"]
+    },
+    "ebsco": {
+      "name": "EBSCOhost",
+      "host": "search.ebscohost.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "综合"]
+    },
+    "emerald": {
+      "name": "Emerald Insight",
+      "host": "www.emerald.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "管理"]
+    },
+    "proquest": {
+      "name": "ProQuest",
+      "host": "www.proquest.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["英文", "学位论文"]
+    },
+    "duxiu": {
+      "name": "读秀学术搜索",
+      "host": "www.duxiu.com",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["中文", "图书"]
+    },
+    "nstl": {
+      "name": "国家科技图书文献中心 NSTL",
+      "host": "www.nstl.gov.cn",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["中文", "文献传递"]
+    },
+    "lib": {
+      "name": "河海大学图书馆",
+      "host": "lib.hhu.edu.cn",
+      "scheme": "https",
+      "entry": "/",
+      "tags": ["本校", "入口"]
+    }
+  }
+}

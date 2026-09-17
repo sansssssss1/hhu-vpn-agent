@@ -12,6 +12,10 @@ err.txt
 .pack-staging/
 *.zip
 
+# 临时/探测产物（早期沙箱权限探测留下的 .tmp/x.txt 曾误入仓库）
+.tmp/
+*.log
+
 # 上游打包产物 / 缓存
 __pycache__/
 *.pyc
